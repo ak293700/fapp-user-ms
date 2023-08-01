@@ -1,6 +1,6 @@
-
 using Application.Common.Dtos.UserDtos;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Application.Services;
 
@@ -15,9 +15,8 @@ public class UserService
 
     public async Task<IEnumerable<LiteUserDto>> GetAll(CancellationToken cancellationToken = default)
     {
-        return _context.Users
-            .AsQueryable()
+        return await _context.Users.AsQueryable()
             .Select(u => new LiteUserDto(u.Id, u.UserName))
-            .ToList();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 }
