@@ -1,6 +1,8 @@
 
 using Application.Common.Dtos;
+using Application.Common.Dtos.UserDtos;
 using Domain.Entities;
+using MongoDB.Driver;
 
 namespace Application.Services;
 
@@ -13,15 +15,11 @@ public class UserService
         _context = context;
     }
 
-    public async Task<string> CreateAsync(CreateUserDto request, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<LiteUserDto>> GetAll(CancellationToken cancellationToken = default)
     {
-        User user = new()
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName
-        };
-        
-        await _context.Users.InsertOneAsync(user, cancellationToken: cancellationToken);
-        return user.Id;
+        return _context.Users
+            .AsQueryable()
+            .Select(u => new LiteUserDto(u.Id, u.FirstName, u.LastName))
+            .ToList();
     }
 }

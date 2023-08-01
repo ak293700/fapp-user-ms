@@ -10,6 +10,7 @@ public static class Configure
     {
         #region Services
         
+        builder.Services.AddScoped<AuthService>();
         builder.Services.AddScoped<UserService>();
         
         #endregion

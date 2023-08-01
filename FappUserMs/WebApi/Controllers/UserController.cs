@@ -1,9 +1,6 @@
-using System.Dynamic;
-using Application.Common.Dtos;
+using Application.Common.Dtos.UserDtos;
 using Application.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace WebApi.Controllers;
 
@@ -20,9 +17,16 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpPost]
-    public async Task<ActionResult<string>> Create(CreateUserDto request, CancellationToken cancellationToken = default)
+    [HttpGet]
+    public async Task<ActionResult<string>> GetAll(CancellationToken cancellationToken = default)
     {
-        return Ok(await _userService.CreateAsync(request, cancellationToken));
+        try
+        {
+            return Ok(await _userService.GetAll(cancellationToken));
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }
