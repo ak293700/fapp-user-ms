@@ -1,7 +1,5 @@
 
-using Application.Common.Dtos;
 using Application.Common.Dtos.UserDtos;
-using Domain.Entities;
 using MongoDB.Driver;
 
 namespace Application.Services;
