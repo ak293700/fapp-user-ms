@@ -1,1 +1,1 @@
-global using MongoDB.Bson;
+global using NotFoundDomainException = Domain.Common.Exceptions.DomainException.NotFoundDomainException;

@@ -1,3 +1,4 @@
+using Application.Common.Dtos.AuthDtos;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,11 +18,11 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("register")]
-    public async Task<IActionResult> Register(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Register(RegisterDto request, CancellationToken cancellationToken = default)
     {
         try
         {
-            await _authService.Register(cancellationToken);
+            await _authService.Register(request, cancellationToken);
             return Ok();
         }
         catch (Exception e)
@@ -31,11 +32,11 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<string>> Login(LogInDto request, CancellationToken cancellationToken = default)
     {
         try
         {
-            return Ok(await _authService.Login(cancellationToken));
+            return Ok(await _authService.Login(request, cancellationToken));
         }
         catch (Exception e)
         {

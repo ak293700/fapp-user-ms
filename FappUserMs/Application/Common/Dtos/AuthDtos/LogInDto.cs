@@ -1,3 +1,6 @@
 namespace Application.Common.Dtos.AuthDtos;
 
-public record LogInDto();
+public record LogInDto(
+    string Email,
+    string Password
+);
