@@ -19,11 +19,12 @@ public class AuthService
 {
     private readonly string _authToken;
     private readonly IApplicationDbContext _context;
+    public const string AuthTokenLocation = "Auth:Token";
 
     public AuthService(IApplicationDbContext context, IConfiguration configuration)
     {
         _context = context;
-        _authToken = configuration.GetValue<string>("Auth:Token")
+        _authToken = configuration.GetValue<string>(AuthTokenLocation) 
                      ?? throw new Exception("Unable to create the token");
     }
 
