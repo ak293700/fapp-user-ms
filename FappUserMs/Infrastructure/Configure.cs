@@ -1,3 +1,4 @@
+using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,7 @@ public static class Configure
         
         #region DbContext
 
-        services.AddScoped<ApplicationDbContext>();
+        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
         #endregion
         
@@ -38,6 +39,4 @@ public static class Configure
                     });
             });
     }
-    
-    
 }

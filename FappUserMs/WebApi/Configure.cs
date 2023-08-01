@@ -1,21 +1,55 @@
 using Application.Common.Interfaces;
 using Infrastructure;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace WebApi;
 
 public static class Configure
 {
+    static Configure()
+    {
+    }
+
     public static WebApplicationBuilder ConfigureWebApi(this WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers();
-        builder.Services.AddSwaggerGen();
+        IServiceCollection services = builder.Services;
+        
+        services.AddControllers();
+        ConfigureSwagger(services);
 
-        #region Services
-        
-        builder.Services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-        #endregion
-        
         return builder;
+    }
+    
+    private static void ConfigureSwagger(IServiceCollection services)
+    {
+        #region Swagger
+
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Izily", Version = "v1.0" });
+            
+            // Allow swagger to handle JWT Bearer tokens and authorization
+            // Should not change "oauth2" to another name
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+            {
+                Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey
+            });
+
+            // That is a need for authorization in swagger to
+            options.OperationFilter<SecurityRequirementsOperationFilter>();
+        });
+
+        services.Configure<SwaggerUIOptions>(options =>
+        {
+            options.DocExpansion(DocExpansion.None); // Set default collapse state
+        });
+        
+        #endregion
     }
 
 }
