@@ -9,7 +9,15 @@ public static class Configure
 
     public static WebApplicationBuilder ConfigureInfrastructure(this WebApplicationBuilder builder)
     {
-        ConfigureCors(builder.Services);
+        IServiceCollection services = builder.Services;
+        
+        #region DbContext
+
+        services.AddScoped<ApplicationDbContext>();
+
+        #endregion
+        
+        ConfigureCors(services);
 
         return builder;
     }

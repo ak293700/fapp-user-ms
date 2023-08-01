@@ -1,3 +1,4 @@
+using Application;
 using Infrastructure;
 using WebApi;
 
@@ -10,6 +11,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder
     .ConfigureInfrastructure()
+    .ConfigureApplication()
     .ConfigureWebApi();
 
 WebApplication app = builder.Build();

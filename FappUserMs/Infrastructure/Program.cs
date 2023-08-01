@@ -16,8 +16,7 @@ await context.Users.InsertOneAsync(new User
 });
 
 IAsyncCursor<User> result = await context.Users.FindAsync(_ => true);
-
-foreach (var a in result.ToList())
+foreach (User user in result.ToList())
 {
-    Console.WriteLine(a.FirstName);
+    Console.WriteLine(user.FirstName);
 }

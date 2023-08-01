@@ -1,3 +1,6 @@
+using Application.Common.Interfaces;
+using Infrastructure;
+
 namespace WebApi;
 
 public static class Configure
@@ -6,6 +9,11 @@ public static class Configure
     {
         builder.Services.AddControllers();
         builder.Services.AddSwaggerGen();
+
+        #region Services
+        
+        builder.Services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+        #endregion
         
         return builder;
     }
