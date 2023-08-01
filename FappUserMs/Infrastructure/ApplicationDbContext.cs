@@ -1,31 +1,52 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
 
 namespace Infrastructure;
 
-public class ApplicationDbContext : IApplicationDbContext
+public class ApplicationDbContext : IApplicationDbContext, IDisposable
 {
     public IMongoCollection<User> Users { get; }
 
+    private readonly ILoggerFactory _loggerFactory;
 
-    public ApplicationDbContext(string? connectionString)
+
+    public ApplicationDbContext(IConfiguration configuration)
     {
-        if (connectionString is null)
-            throw new Exception("Connection string is null");
-        
-        const string databaseName = "users"; 
-        MongoClient client = new MongoClient(connectionString);
-        
+        string connectionString = configuration.GetConnectionString("UserMongoDb")
+                                  ?? throw new Exception("Connection string is null");
+
+        _loggerFactory = CreateLoggerFactory(configuration);
+
+        const string databaseName = "users";
+        IMongoDatabase? database = CreateClient(connectionString).GetDatabase(databaseName);
+
         const string collectionName = "users";
-        IMongoDatabase? database = client.GetDatabase(databaseName);
-        
         Users = database.GetCollection<User>(collectionName);
     }
 
-    public ApplicationDbContext(IConfiguration configuration) 
-        : this(configuration.GetConnectionString("UserMongoDb"))
+    private ILoggerFactory CreateLoggerFactory(IConfiguration configuration)
     {
+        return LoggerFactory.Create(lb =>
+        {
+            lb.AddConfiguration(configuration.GetSection("Logging"));
+            lb.AddSimpleConsole();
+        });
+    }
+
+    private MongoClient CreateClient(string connectionString)
+    {
+        MongoClientSettings settings = MongoClientSettings.FromConnectionString(connectionString);
+        settings.LoggingSettings = new LoggingSettings(_loggerFactory);
+        return new MongoClient(settings);
+    }
+
+    public void Dispose()
+    {
+        _loggerFactory.Dispose();
+        // GC.SuppressFinalize(this); // TODO: Understand this
     }
 }
