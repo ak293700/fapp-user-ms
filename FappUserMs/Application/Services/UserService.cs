@@ -13,7 +13,7 @@ public class UserService
         _context = context;
     }
 
-    public async Task<ObjectId> CreateAsync(CreateUserDto request, CancellationToken cancellationToken = default)
+    public async Task<string> CreateAsync(CreateUserDto request, CancellationToken cancellationToken = default)
     {
         User user = new()
         {

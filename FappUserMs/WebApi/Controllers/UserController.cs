@@ -21,14 +21,8 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ObjectId>> Create(CreateUserDto request, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<string>> Create(CreateUserDto request, CancellationToken cancellationToken = default)
     {
         return Ok(await _userService.CreateAsync(request, cancellationToken));
     }
 }
-
-/*
- * AI: 
- *
- * 
- */

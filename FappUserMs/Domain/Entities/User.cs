@@ -7,5 +7,5 @@ public class User : BaseEntity
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
     
-    public IList<ObjectId> FriendsIds { get; set; } = new List<ObjectId>(); 
+    public IList<ObjectId> FriendsIds { get; set; } = null!; 
 }
