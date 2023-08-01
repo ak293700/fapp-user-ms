@@ -33,7 +33,6 @@ public class AuthService
         if (!IsEmailValid(request.Email))
             throw new CustomException("L'email n'est pas valide");
 
-
         // ift he email address is already used
         var cursor =
             await _context.Users.FindAsync(u => u.Email == request.Email, cancellationToken: cancellationToken);
@@ -46,9 +45,7 @@ public class AuthService
         // Set password information
         User user = new()
         {
-            UserName = $"{request.FirstName} {request.LastName}",
-            FirstName = request.FirstName,
-            LastName = request.LastName,
+            UserName = request.UserName,
             Email = request.Email,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,

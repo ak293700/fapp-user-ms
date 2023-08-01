@@ -19,7 +19,7 @@ public class UserService
     {
         return _context.Users
             .AsQueryable()
-            .Select(u => new LiteUserDto(u.Id, u.FirstName, u.LastName))
+            .Select(u => new LiteUserDto(u.Id, u.UserName))
             .ToList();
     }
 }

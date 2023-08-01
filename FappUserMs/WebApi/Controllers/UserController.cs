@@ -1,3 +1,4 @@
+using Application.Common.Dtos.UserDtos;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<string>> GetAll(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<LiteUserDto>>> GetAll(CancellationToken cancellationToken = default)
     {
         try
         {

@@ -11,12 +11,11 @@ ApplicationDbContext context =
 
 await context.Users.InsertOneAsync(new User
 {
-    FirstName = "John",
-    LastName = "Doe"
+    UserName = "Ak2"
 });
 
 IAsyncCursor<User> result = await context.Users.FindAsync(_ => true);
 foreach (User user in result.ToList())
 {
-    Console.WriteLine(user.FirstName);
+    // Console.WriteLine(user.FirstName);
 }
