@@ -1,7 +1,6 @@
 using Domain.Entities;
 using MongoDB.Driver;
 using MongoDBMigrations;
-using Version = MongoDBMigrations.Version;
 
 namespace Infrastructure.Persistence.Migrations;
 
