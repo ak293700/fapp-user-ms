@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Infrastructure;
 using Mongo2Go;
 using MongoDB.Driver;
 using Test.Mocks;
@@ -20,10 +21,13 @@ public static class ContextGenerator
             _runner = MongoDbRunner.StartForDebugging(port: 27018);
 
         // Log the connection string to the test console
-        Console.WriteLine(_runner.ConnectionString);
+        Console.WriteLine();
 
         // Generate a new database for each test
-        IMongoDatabase database = new MongoClient(_runner.ConnectionString).GetDatabase(Guid.NewGuid().ToString());
+        string databaseName = Guid.NewGuid().ToString();
+        IMongoDatabase database = new MongoClient(_runner.ConnectionString).GetDatabase(databaseName);
+        ApplicationDbContext.RunMigrations(_runner.ConnectionString, databaseName);
+
         return new ApplicationDbContextMock(database);
     }
 }

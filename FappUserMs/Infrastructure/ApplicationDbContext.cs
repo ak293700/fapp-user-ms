@@ -50,12 +50,18 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
         string connectionString = configuration.GetConnectionString("UserMongoDb")
                                   ?? throw new Exception("Connection string is null");
 
+        RunMigrations(connectionString, DatabaseName);
+    }
+
+    public static void RunMigrations(string connectionString, string databaseName)
+    {
         new MigrationEngine()
-            .UseDatabase(connectionString, DatabaseName)
+            .UseDatabase(connectionString, databaseName)
             .UseAssemblyOfType<ApplicationDbContext>()
             .UseSchemeValidation(false)
             .Run();
     }
+
 
     public void Dispose()
     {
