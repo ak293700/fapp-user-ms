@@ -13,12 +13,13 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
     public IMongoCollection<User> Users { get; }
 
     private readonly ILoggerFactory _loggerFactory;
+    public const string ConnectionStringName = "UserMongoDb";
     public const string DatabaseName = "users";
     public const string UserCollectionName = "users";
 
     public ApplicationDbContext(IConfiguration configuration)
     {
-        string connectionString = configuration.GetConnectionString("UserMongoDb")
+        string connectionString = configuration.GetConnectionString(ConnectionStringName)
                                   ?? throw new Exception("Connection string is null");
 
         _loggerFactory = CreateLoggerFactory(configuration);
