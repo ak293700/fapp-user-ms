@@ -12,20 +12,23 @@ namespace Infrastructure;
 public static class Configure
 {
     public const string CorsPolicy = "CorsPolicy"; // The name of the cors policy.
-    
+
 
     public static WebApplicationBuilder ConfigureInfrastructure(this WebApplicationBuilder builder)
     {
         IServiceCollection services = builder.Services;
-        
+
         #region DbContext
 
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
         #endregion
-        
+
         ConfigureCors(services);
         ConfigureAuthentication(builder);
+
+        // Ensure that the migrations are run
+        ApplicationDbContext.RunMigrations(builder.Configuration);
 
         return builder;
     }
@@ -46,12 +49,12 @@ public static class Configure
                     });
             });
     }
-    
+
     private static void ConfigureAuthentication(WebApplicationBuilder builder)
     {
         IServiceCollection services = builder.Services;
         IConfiguration configuration = builder.Configuration;
-        
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -68,5 +71,4 @@ public static class Configure
                 };
             });
     }
- 
 }

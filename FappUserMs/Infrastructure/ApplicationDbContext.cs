@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
+using MongoDBMigrations;
 
 namespace Infrastructure;
 
@@ -40,6 +41,19 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
         MongoClientSettings settings = MongoClientSettings.FromConnectionString(connectionString);
         settings.LoggingSettings = new LoggingSettings(_loggerFactory);
         return new MongoClient(settings);
+    }
+
+    public static void RunMigrations(IConfiguration configuration)
+    {
+        // Get the connection string from the appsettings.json file
+        string connectionString = configuration.GetConnectionString("UserMongoDb")
+                                  ?? throw new Exception("Connection string is null");
+
+        new MigrationEngine()
+            .UseDatabase(connectionString, DatabaseName)
+            .UseAssemblyOfType<ApplicationDbContext>()
+            .UseSchemeValidation(false)
+            .Run();
     }
 
     public void Dispose()

@@ -12,14 +12,12 @@ public class RemoveAgeMigration : IMigration
 
     public void Up(IMongoDatabase database)
     {
-        Console.WriteLine("Running RemoveAgeMigration Up");
         IMongoCollection<User> users = database.GetCollection<User>(ApplicationDbContext.UserCollectionName);
         users.UpdateMany(Builders<User>.Filter.Empty, Builders<User>.Update.Unset("Age"));
     }
 
     public void Down(IMongoDatabase database)
     {
-        Console.WriteLine("Running RemoveAgeMigration Down");
         IMongoCollection<User> users = database.GetCollection<User>(ApplicationDbContext.UserCollectionName);
         users.UpdateMany(Builders<User>.Filter.Empty, Builders<User>.Update.Set("Age", 18));
     }
