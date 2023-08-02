@@ -12,7 +12,8 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
     public IMongoCollection<User> Users { get; }
 
     private readonly ILoggerFactory _loggerFactory;
-
+    public const string DatabaseName = "users";
+    public const string UserCollectionName = "users";
 
     public ApplicationDbContext(IConfiguration configuration)
     {
@@ -21,11 +22,8 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
 
         _loggerFactory = CreateLoggerFactory(configuration);
 
-        const string databaseName = "users";
-        IMongoDatabase? database = CreateClient(connectionString).GetDatabase(databaseName);
-
-        const string collectionName = "users";
-        Users = database.GetCollection<User>(collectionName);
+        IMongoDatabase? database = CreateClient(connectionString).GetDatabase(DatabaseName);
+        Users = database.GetCollection<User>(UserCollectionName);
     }
 
     private ILoggerFactory CreateLoggerFactory(IConfiguration configuration)
