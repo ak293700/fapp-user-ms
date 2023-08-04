@@ -20,7 +20,7 @@ public static class Configure
 
         #region DbContext
 
-        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+        services.AddSingleton<IApplicationDbContext, ApplicationDbContext>();
 
         #endregion
 

@@ -15,7 +15,7 @@ public static class ContextGenerator
     public static ApplicationDbContextMock GenerateInMemory()
     {
         if (_runner is null)
-            _runner = MongoDbRunner.StartForDebugging(port: 27018);
+            _runner = MongoDbRunner.Start();
 
         // Generate a new database for each test
         return ApplicationDbContextMock.GenerateDatabaseFromConnectionString(_runner.ConnectionString);

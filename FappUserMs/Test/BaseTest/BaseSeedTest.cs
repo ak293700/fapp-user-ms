@@ -1,11 +1,12 @@
 using Application.Common.Interfaces;
 using Test.Mocks;
 
-namespace Test.UnitTests;
+namespace Test.BaseTest;
 
 /// <summary>
 /// Every inheritor of this class will have a <see cref="IApplicationDbContext"/> seeded according to infrastructure seed
 /// </summary>
+[Collection(MongoDatabaseCollection.Name)]
 public abstract class BaseSeedTest : IDisposable
 {
     protected IApplicationDbContext Context => _context;
@@ -13,9 +14,10 @@ public abstract class BaseSeedTest : IDisposable
     private readonly ApplicationDbContextMock _context;
     // protected readonly ApplicationDbContextInitializer Initializer;
 
-    public BaseSeedTest()
+    public BaseSeedTest(MongoDatabaseFixture fixture)
     {
-        _context = ContextGenerator.GenerateInMemory();
+        _context = fixture.GenerateDatabase();
+        // _context = ContextGenerator.GenerateInMemory();
         // Initializer = new ApplicationDbContextInitializer(Context);
         // Initializer.SeedAsync().Wait();
     }

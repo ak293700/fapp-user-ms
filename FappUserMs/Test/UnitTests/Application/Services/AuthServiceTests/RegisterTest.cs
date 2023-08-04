@@ -14,7 +14,7 @@ public class RegisterTest : BaseSeedTest
         { "Auth:Token", "aSeCrEtToKeN" }
     };
 
-    public RegisterTest()
+    public RegisterTest(MongoDatabaseFixture fixture) : base(fixture)
     {
         _authService = new AuthService(Context, ConfigurationMock.GetCustom(MockConf));
     }
