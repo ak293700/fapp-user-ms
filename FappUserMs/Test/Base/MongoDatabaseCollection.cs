@@ -1,4 +1,4 @@
-namespace Test.BaseTest;
+namespace Test.Base;
 
 [CollectionDefinition(Name)]
 public class MongoDatabaseCollection : ICollectionFixture<MongoDatabaseFixture>

@@ -1,11 +1,12 @@
 using Application.Common.Dtos.AuthDtos;
 using Application.Common.Exceptions;
 using Application.Services;
+using Test.Base;
 using Test.Mocks;
 
 namespace Test.UnitTests.Application.Services.AuthServiceTests;
 
-public class RegisterTest : BaseTest.BaseTest
+public class RegisterTest : BaseTest
 {
     private readonly AuthService _authService;
 
@@ -18,7 +19,7 @@ public class RegisterTest : BaseTest.BaseTest
     {
         SeedUsers();
 
-        _authService = new AuthService(DbContext, ConfigurationMock.GetCustom(MockConf));
+        _authService = new AuthService(Context, ConfigurationMock.GetCustom(MockConf));
     }
 
     [Fact]

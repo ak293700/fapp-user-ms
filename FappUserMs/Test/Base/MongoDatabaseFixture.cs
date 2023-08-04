@@ -2,7 +2,7 @@ using FappCommon.MongoDbContext;
 using Mongo2Go;
 using Test.Mocks;
 
-namespace Test.BaseTest;
+namespace Test.Base;
 
 /// <summary>
 /// Singleton share between all tests
