@@ -9,7 +9,7 @@ public class ApplicationDbContextMock : IApplicationDbContext, IDisposable
 {
     public IMongoCollection<User> Users { get; }
 
-    private readonly string _databaseName;
+    public readonly string DatabaseName;
     private readonly IMongoClient _client;
 
     private ApplicationDbContextMock(string connectionString)
@@ -17,9 +17,9 @@ public class ApplicationDbContextMock : IApplicationDbContext, IDisposable
         #region Pre-Initialization
 
         _client = new MongoClient(connectionString);
-        _databaseName = Guid.NewGuid().ToString();
-        IMongoDatabase database = _client.GetDatabase(_databaseName);
-        ApplicationDbContext.RunMigrations(connectionString, _databaseName);
+        DatabaseName = Guid.NewGuid().ToString();
+        IMongoDatabase database = _client.GetDatabase(DatabaseName);
+        ApplicationDbContext.RunMigrations(connectionString, DatabaseName);
 
         #endregion
 
@@ -34,7 +34,9 @@ public class ApplicationDbContextMock : IApplicationDbContext, IDisposable
 
     public void Dispose()
     {
-        _client.DropDatabase(_databaseName);
+        // Just there to same memory during the test process
+        // At the end the instance is dropped so
+        _client.DropDatabase(DatabaseName);
         GC.SuppressFinalize(this);
     }
 }

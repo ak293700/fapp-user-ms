@@ -16,6 +16,8 @@ public class RegisterTest : BaseSeedTest
 
     public RegisterTest(MongoDatabaseFixture fixture) : base(fixture)
     {
+        SeedUsers();
+
         _authService = new AuthService(Context, ConfigurationMock.GetCustom(MockConf));
     }
 
@@ -43,13 +45,11 @@ public class RegisterTest : BaseSeedTest
     public async Task Same_Username_Should_Pass()
     {
         // Arrange
-        RegisterDto command1 = new RegisterDto("Zizou59", "zizou@marseille.msl", "ZiZou1998$");
-        RegisterDto command2 = new RegisterDto("Zizou59", "zizou_2@marseille.msl", "ZiZou1998$");
+        RegisterDto command = new RegisterDto("Ak2", "zizou@marseille.msl", "ZiZou1998$");
 
-        // Act
-        await _authService.Register(command1);
-
-        // Assert
-        await Assert.ThrowsAsync<MongoDB.Driver.MongoWriteException>(async () => await _authService.Register(command2));
+        // Act + Assert
+        await Assert.ThrowsAsync<MongoDB.Driver.MongoWriteException>(
+            async () => await _authService.Register(command)
+        );
     }
 }

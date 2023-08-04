@@ -3,6 +3,9 @@ using Test.Mocks;
 
 namespace Test.BaseTest;
 
+/// <summary>
+/// Singleton share between all tests
+/// </summary>
 public class MongoDatabaseFixture : IDisposable
 {
     private readonly MongoDbRunner _runner;
@@ -17,6 +20,10 @@ public class MongoDatabaseFixture : IDisposable
         return ApplicationDbContextMock.GenerateDatabaseFromConnectionString(_runner.ConnectionString);
     }
 
+    public void ImportData(string databaseName, string collectionName, string inputFile)
+    {
+        _runner.Import(databaseName, collectionName, inputFile, false);
+    }
 
     public void Dispose()
     {

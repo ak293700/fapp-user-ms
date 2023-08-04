@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using Infrastructure;
 using Test.Mocks;
 
 namespace Test.BaseTest;
@@ -9,17 +10,21 @@ namespace Test.BaseTest;
 [Collection(MongoDatabaseCollection.Name)]
 public abstract class BaseSeedTest : IDisposable
 {
+    private readonly MongoDatabaseFixture _fixture;
     protected IApplicationDbContext Context => _context;
-
     private readonly ApplicationDbContextMock _context;
-    // protected readonly ApplicationDbContextInitializer Initializer;
 
-    public BaseSeedTest(MongoDatabaseFixture fixture)
+
+    protected BaseSeedTest(MongoDatabaseFixture fixture)
     {
-        _context = fixture.GenerateDatabase();
-        // _context = ContextGenerator.GenerateInMemory();
-        // Initializer = new ApplicationDbContextInitializer(Context);
-        // Initializer.SeedAsync().Wait();
+        _fixture = fixture;
+        _context = _fixture.GenerateDatabase();
+        // SeedAsync().Wait();
+    }
+
+    protected void SeedUsers()
+    {
+        _fixture.ImportData(_context.DatabaseName, ApplicationDbContext.UserCollectionName, "");
     }
 
     public void Dispose()
