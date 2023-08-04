@@ -1,6 +1,9 @@
 using Application.Common.Dtos.AuthDtos;
 using Application.Common.Exceptions;
 using Application.Services;
+using Domain.Entities;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Test.Base;
 using Test.Mocks;
 
@@ -47,6 +50,16 @@ public class RegisterTest : BaseTest
     {
         // Arrange
         RegisterDto command = new RegisterDto("Ak2", "address@domain.com", "QwErTy#$01");
+
+        var count = await Context.Users.AsQueryable()
+            .CountAsync();
+
+        var client = Context.Client;
+        var database = client.GetDatabase(Context.DatabaseName);
+        var collection = database.GetCollection<User>("users");
+
+        var count2 = await collection.AsQueryable()
+            .CountAsync();
 
         // Act + Assert
         await Assert.ThrowsAsync<MongoDB.Driver.MongoWriteException>(

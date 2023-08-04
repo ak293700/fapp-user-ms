@@ -18,8 +18,6 @@ public class MockMongoDbContext : BaseMockMongoDbContext, IApplicationDbContext,
     protected override void InitCollections(IMongoDatabase database)
     {
         Users = database.GetCollection<User>(ApplicationDbContext.UserCollectionName);
-
-        Users.InsertOneAsync(new User() { UserName = "A", Email = "a.a@gmail.com" });
     }
 
     protected override void RunMigrations(string connectionString)
