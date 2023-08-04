@@ -1,3 +1,4 @@
+using FappCommon.MongoDbContext.Mock;
 using Mongo2Go;
 using Test.Mocks;
 
@@ -15,9 +16,10 @@ public class MongoDatabaseFixture : IDisposable
         _runner = MongoDbRunner.Start();
     }
 
-    public ApplicationDbContextMock GenerateDatabase()
+    public MockMongoDbContext GenerateDatabase()
     {
-        return ApplicationDbContextMock.GenerateDatabaseFromConnectionString(_runner.ConnectionString);
+        return BaseMockMongoDbContext
+            .GenerateDatabaseFromConnectionString<MockMongoDbContext>(_runner.ConnectionString);
     }
 
     public void ImportData(string databaseName, string collectionName, string inputFile)

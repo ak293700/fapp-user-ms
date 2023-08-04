@@ -12,7 +12,7 @@ public abstract class BaseSeedTest : IDisposable
 {
     private readonly MongoDatabaseFixture _fixture;
     protected IApplicationDbContext Context => _context;
-    private readonly ApplicationDbContextMock _context;
+    private readonly MockMongoDbContext _context;
 
 
     protected BaseSeedTest(MongoDatabaseFixture fixture)
@@ -24,7 +24,8 @@ public abstract class BaseSeedTest : IDisposable
 
     protected void SeedUsers()
     {
-        _fixture.ImportData(_context.DatabaseName, ApplicationDbContext.UserCollectionName, "");
+        _fixture.ImportData(_context.DatabaseName, ApplicationDbContext.UserCollectionName,
+            "/Users/alexandreakdeniz/Documents/Projets/fapp/fapp-user-ms/FappUserMs/db-initializer/users.json");
     }
 
     public void Dispose()
