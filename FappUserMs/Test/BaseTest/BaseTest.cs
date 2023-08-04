@@ -1,4 +1,5 @@
 using Application.Common.Interfaces;
+using FappCommon.MongoDbContext;
 using Infrastructure;
 using Test.Mocks;
 
@@ -8,28 +9,23 @@ namespace Test.BaseTest;
 /// Every inheritor of this class will have a <see cref="IApplicationDbContext"/> seeded according to infrastructure seed
 /// </summary>
 [Collection(MongoDatabaseCollection.Name)]
-public abstract class BaseSeedTest : IDisposable
+public abstract class BaseTest : BaseMongoTest<MockMongoDbContext>, IDisposable
 {
-    private readonly MongoDatabaseFixture _fixture;
-    protected IApplicationDbContext Context => _context;
-    private readonly MockMongoDbContext _context;
+    protected IApplicationDbContext Context => DbContext;
 
-
-    protected BaseSeedTest(MongoDatabaseFixture fixture)
+    protected BaseTest(MongoDatabaseFixture fixture) : base(fixture)
     {
-        _fixture = fixture;
-        _context = _fixture.GenerateDatabase();
-        // SeedAsync().Wait();
     }
+
 
     protected void SeedUsers()
     {
-        _fixture.ImportData(_context.DatabaseName, ApplicationDbContext.UserCollectionName,
+        Fixture.ImportData(DbContext.DatabaseName, ApplicationDbContext.UserCollectionName,
             "/Users/alexandreakdeniz/Documents/Projets/fapp/fapp-user-ms/FappUserMs/db-initializer/users.json");
     }
 
     public void Dispose()
     {
-        _context.Dispose();
+        DbContext.Dispose();
     }
 }

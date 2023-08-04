@@ -5,7 +5,7 @@ using Test.Mocks;
 
 namespace Test.UnitTests.Application.Services.AuthServiceTests;
 
-public class RegisterTest : BaseSeedTest
+public class RegisterTest : BaseTest.BaseTest
 {
     private readonly AuthService _authService;
 
@@ -18,7 +18,7 @@ public class RegisterTest : BaseSeedTest
     {
         SeedUsers();
 
-        _authService = new AuthService(Context, ConfigurationMock.GetCustom(MockConf));
+        _authService = new AuthService(DbContext, ConfigurationMock.GetCustom(MockConf));
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class RegisterTest : BaseSeedTest
     public async Task Same_Username_Should_Pass()
     {
         // Arrange
-        RegisterDto command = new RegisterDto("Ak2", "zizou@marseille.msl", "ZiZou1998$");
+        RegisterDto command = new RegisterDto("Ak2", "address@domain.com", "QwErTy#$01");
 
         // Act + Assert
         await Assert.ThrowsAsync<MongoDB.Driver.MongoWriteException>(

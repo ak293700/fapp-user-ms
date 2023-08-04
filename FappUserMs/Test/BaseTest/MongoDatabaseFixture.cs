@@ -1,4 +1,4 @@
-using FappCommon.MongoDbContext.Mock;
+using FappCommon.MongoDbContext;
 using Mongo2Go;
 using Test.Mocks;
 
@@ -7,7 +7,7 @@ namespace Test.BaseTest;
 /// <summary>
 /// Singleton share between all tests
 /// </summary>
-public class MongoDatabaseFixture : IDisposable
+public class MongoDatabaseFixture : BaseMongoDatabaseFixture<MockMongoDbContext>
 {
     private readonly MongoDbRunner _runner;
 
@@ -16,20 +16,10 @@ public class MongoDatabaseFixture : IDisposable
         _runner = MongoDbRunner.Start();
     }
 
-    public MockMongoDbContext GenerateDatabase()
+
+    public override MockMongoDbContext GenerateDatabase()
     {
         return BaseMockMongoDbContext
             .GenerateDatabaseFromConnectionString<MockMongoDbContext>(_runner.ConnectionString);
-    }
-
-    public void ImportData(string databaseName, string collectionName, string inputFile)
-    {
-        _runner.Import(databaseName, collectionName, inputFile, false);
-    }
-
-    public void Dispose()
-    {
-        _runner.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

@@ -1,6 +1,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
-using FappCommon.MongoDbContext.Mock;
+using FappCommon.MongoDbContext;
 using Infrastructure;
 using MongoDB.Driver;
 
@@ -15,12 +15,12 @@ public class MockMongoDbContext : BaseMockMongoDbContext, IApplicationDbContext,
     }
 
 
-    public override void InitCollections(IMongoDatabase database)
+    protected override void InitCollections(IMongoDatabase database)
     {
         Users = database.GetCollection<User>(ApplicationDbContext.UserCollectionName);
     }
 
-    public override void RunMigrations(string connectionString)
+    protected override void RunMigrations(string connectionString)
     {
         ApplicationDbContext.RunMigrations(connectionString, DatabaseName);
     }
