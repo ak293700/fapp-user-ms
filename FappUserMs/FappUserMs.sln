@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{770E0FC0-2EAA-4661-9943-73BC4C6CAE5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FappCommon", "..\..\fapp-common\FappCommon\FappCommon\FappCommon.csproj", "{4DFB8D37-5E6A-471F-BDAD-B75B364E7DF7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,9 +36,5 @@ Global
 		{770E0FC0-2EAA-4661-9943-73BC4C6CAE5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{770E0FC0-2EAA-4661-9943-73BC4C6CAE5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{770E0FC0-2EAA-4661-9943-73BC4C6CAE5F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DFB8D37-5E6A-471F-BDAD-B75B364E7DF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DFB8D37-5E6A-471F-BDAD-B75B364E7DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DFB8D37-5E6A-471F-BDAD-B75B364E7DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DFB8D37-5E6A-471F-BDAD-B75B364E7DF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
