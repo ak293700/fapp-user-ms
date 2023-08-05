@@ -5,9 +5,9 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Application.Common.Dtos.AuthDtos;
-using Domain.Entities;
+using Domain.Entities.UserEntities;
 using FappCommon.Exceptions.ApplicationExceptions;
-using FappCommon.Exceptions.Base;
+using FappCommon.Exceptions.ApplicationExceptions.UserExceptions;
 using FappCommon.Exceptions.DomainExceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -31,13 +31,14 @@ public class AuthService
     public async Task Register(RegisterDto request, CancellationToken cancellationToken = default)
     {
         if (!IsEmailValid(request.Email))
-            throw new CustomException("L'email n'est pas valide");
+            throw new DataValidationException("L'email n'est pas valide");
 
         // ift he email address is already used
-        var cursor =
-            await _context.Users.FindAsync(u => u.Email == request.Email, cancellationToken: cancellationToken);
-        if (await cursor.AnyAsync(cancellationToken))
-            throw new CustomException("Cette adresse email est déjà utilisée");
+        if (_context.Users.AsQueryable().Any(u => u.Email == request.Email))
+            throw new AlreadyExistDomainException("Cette adresse email est déjà utilisée");
+
+        if (_context.Users.AsQueryable().Any(u => u.UserName == request.UserName))
+            throw new AlreadyExistDomainException("Ce nom d'utilisateur est déjà utilisé");
 
 
         CreatePasswordHashWithChecking(request.Password, out var passwordHash, out var passwordSalt);
@@ -87,7 +88,7 @@ public class AuthService
         }
     }
 
-    public async Task<string> Login(LogInDto registerUser, CancellationToken cancellationToken = default)
+    public ValueTask<string> LogIn(LogInDto registerUser, CancellationToken cancellationToken = default)
     {
         // Check if the user exists
         User user =
@@ -101,13 +102,13 @@ public class AuthService
                     PasswordSalt = u.PasswordSalt
                 })
                 .FirstOrDefault()
-            ?? throw NotFoundDomainException.Instance;
+            ?? throw new NotAuthorizedApplicationException("Mot de passe ou email incorrect");
 
         // Check if the password is correct
         if (!VerifyPasswordHash(registerUser.Password, user.PasswordHash, user.PasswordSalt))
-            throw new ArgumentException();
+            throw new NotAuthorizedApplicationException("Mot de passe ou email incorrect");
 
-        return CreateToken(user);
+        return new ValueTask<string>(CreateToken(user));
     }
 
     /// <summary>
@@ -166,7 +167,6 @@ public class AuthService
 
         return claims;
     }
-
 
     private static readonly ImmutableArray<char> SpecialCharacters = new[]
     {

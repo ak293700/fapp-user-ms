@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            return Ok(await _authService.Login(request, cancellationToken));
+            return Ok(await _authService.LogIn(request, cancellationToken));
         }
         catch (CustomException e)
         {

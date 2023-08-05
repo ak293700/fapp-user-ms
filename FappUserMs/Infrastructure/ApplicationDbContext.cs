@@ -1,5 +1,5 @@
 using Application.Common.Interfaces;
-using Domain.Entities;
+using Domain.Entities.UserEntities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;

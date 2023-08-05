@@ -1,4 +1,4 @@
-using Domain.Entities;
+using Domain.Entities.UserEntities;
 using MongoDB.Driver;
 using MongoDBMigrations;
 

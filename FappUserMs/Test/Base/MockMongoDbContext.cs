@@ -1,5 +1,5 @@
 using Application.Common.Interfaces;
-using Domain.Entities;
+using Domain.Entities.UserEntities;
 using FappCommon.Mongo4Test;
 using Infrastructure;
 using MongoDB.Driver;
