@@ -33,8 +33,13 @@ public static class Configure
 
         #endregion
 
+        # region Others
+
+        services.AddHttpContextAccessor();
         ConfigureCors(services);
         ConfigureAuthentication(builder);
+
+        # endregion
 
 
         return builder;

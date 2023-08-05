@@ -12,7 +12,6 @@ using FappCommon.Exceptions.DomainExceptions;
 using FappCommon.Exceptions.InfrastructureExceptions.ConfigurationExceptions.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
 
 namespace Application.Services;
 
@@ -34,11 +33,6 @@ public class AuthService
         ThrowIfEmailIsInvalid(request.Email);
         ThrowIfUsernameIsInvalid(request.UserName);
 
-
-        if (request.UserName.Length is < 3 or > 20)
-            throw new DataValidationException("Le nom d'utilisateur doit faire entre 3 et 20 caractères");
-
-        // ift he email address is already used
         if (_context.Users.AsQueryable().Any(u => u.Email == request.Email))
             throw new AlreadyExistDomainException("Cette adresse email est déjà utilisée");
 
@@ -55,6 +49,7 @@ public class AuthService
             Email = request.Email,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
+            Friends = Array.Empty<Friend>()
         };
 
         await _context.Users.InsertOneAsync(user, cancellationToken: cancellationToken);
