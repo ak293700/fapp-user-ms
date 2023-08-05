@@ -1,14 +1,14 @@
 using System.Collections.Immutable;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Application.Common.Dtos.AuthDtos;
-using Application.Common.Exceptions;
-using Domain.Common.Exceptions;
 using Domain.Entities;
+using FappCommon.Exceptions.ApplicationExceptions;
+using FappCommon.Exceptions.Base;
+using FappCommon.Exceptions.DomainExceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -24,7 +24,7 @@ public class AuthService
     public AuthService(IApplicationDbContext context, IConfiguration configuration)
     {
         _context = context;
-        _authToken = configuration.GetValue<string>(AuthTokenLocation) 
+        _authToken = configuration.GetValue<string>(AuthTokenLocation)
                      ?? throw new Exception("Unable to create the token");
     }
 

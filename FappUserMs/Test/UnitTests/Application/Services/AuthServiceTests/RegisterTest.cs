@@ -1,6 +1,6 @@
 using Application.Common.Dtos.AuthDtos;
-using Application.Common.Exceptions;
 using Application.Services;
+using FappCommon.Exceptions.ApplicationExceptions;
 using FappCommon.Mocks;
 using MongoDB.Driver;
 using Test.Base;

@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
     {
         _authService = authService;
     }
-    
+
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto request, CancellationToken cancellationToken = default)
     {
@@ -25,12 +25,12 @@ public class AuthController : ControllerBase
             await _authService.Register(request, cancellationToken);
             return Ok();
         }
-        catch (Exception e)
+        catch (CustomException e)
         {
             return BadRequest(e.Message);
         }
     }
-    
+
     [HttpPost("login")]
     public async Task<ActionResult<string>> Login(LogInDto request, CancellationToken cancellationToken = default)
     {
@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
         {
             return Ok(await _authService.Login(request, cancellationToken));
         }
-        catch (Exception e)
+        catch (CustomException e)
         {
             return BadRequest(e.Message);
         }

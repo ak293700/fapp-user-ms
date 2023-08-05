@@ -1,1 +1,1 @@
-global using NotFoundDomainException = Domain.Common.Exceptions.DomainException.NotFoundDomainException;
+global using FappCommon.Exceptions.Base;
