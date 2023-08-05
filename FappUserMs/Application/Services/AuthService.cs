@@ -9,6 +9,7 @@ using Domain.Entities.UserEntities;
 using FappCommon.Exceptions.ApplicationExceptions;
 using FappCommon.Exceptions.ApplicationExceptions.UserExceptions;
 using FappCommon.Exceptions.DomainExceptions;
+using FappCommon.Exceptions.InfrastructureExceptions.ConfigurationExceptions.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -25,7 +26,7 @@ public class AuthService
     {
         _context = context;
         _authToken = configuration.GetValue<string>(AuthTokenLocation)
-                     ?? throw new Exception("Unable to create the token");
+                     ?? throw new ConfigurationException("Unable to get the auth token");
     }
 
     public async Task Register(RegisterDto request, CancellationToken cancellationToken = default)

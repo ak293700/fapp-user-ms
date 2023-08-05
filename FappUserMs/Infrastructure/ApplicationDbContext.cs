@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities.UserEntities;
+using FappCommon.Exceptions.InfrastructureExceptions.ConfigurationExceptions.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -20,7 +21,8 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
     public ApplicationDbContext(IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString(ConnectionStringName)
-                                  ?? throw new Exception("Connection string is null");
+                                  ?? throw ConfigurationException.ValueNotFoundException.Instance;
+
 
         _loggerFactory = CreateLoggerFactory(configuration);
 
@@ -48,7 +50,7 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
     {
         // Get the connection string from the appsettings.json file
         string connectionString = configuration.GetConnectionString("UserMongoDb")
-                                  ?? throw new Exception("Connection string is null");
+                                  ?? throw ConfigurationException.ValueNotFoundException.Instance;
 
         RunMigrations(connectionString, DatabaseName);
     }

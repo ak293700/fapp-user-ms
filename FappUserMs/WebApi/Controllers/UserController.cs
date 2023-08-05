@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
 
-[Route("/user")]
+[Route("/[controller]")]
 [Produces("application/json")]
 [Consumes("application/json")]
 [ApiController]
@@ -22,12 +22,11 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<LiteUserDto>>> GetAll(CancellationToken cancellationToken = default)
     {
-        Console.WriteLine("GetAll");
         try
         {
             return Ok(await _userService.GetAll(cancellationToken));
         }
-        catch (Exception e)
+        catch (CustomException e)
         {
             return BadRequest(e.Message);
         }

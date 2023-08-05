@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
 
-[Route("/user/auth")]
+[Route("/[controller]")]
 [Consumes("application/json")]
 [Produces("application/json")]
 [ApiController]

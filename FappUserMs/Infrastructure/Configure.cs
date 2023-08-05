@@ -1,6 +1,8 @@
 using System.Text;
 using Application.Common.Interfaces;
 using Application.Services;
+using FappCommon.CurrentUserService;
+using FappCommon.Exceptions.InfrastructureExceptions.ConfigurationExceptions.Base;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -21,14 +23,19 @@ public static class Configure
         #region DbContext
 
         services.AddSingleton<IApplicationDbContext, ApplicationDbContext>();
+        ApplicationDbContext.RunMigrations(builder.Configuration);
+
+        #endregion
+
+        #region Services
+
+        services.AddScoped<ICurrentUserService, CurrentUserServiceImpl>();
 
         #endregion
 
         ConfigureCors(services);
         ConfigureAuthentication(builder);
 
-        // Ensure that the migrations are run
-        ApplicationDbContext.RunMigrations(builder.Configuration);
 
         return builder;
     }
@@ -64,7 +71,7 @@ public static class Configure
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8
                             .GetBytes(configuration.GetValue<string>(AuthService.AuthTokenLocation)
-                                      ?? throw new Exception("Token not found"))
+                                      ?? throw ConfigurationException.ValueNotFoundException.Instance)
                     ),
                     ValidateIssuer = false,
                     ValidateAudience = false
