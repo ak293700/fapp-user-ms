@@ -46,7 +46,7 @@ public class RegisterTest : BaseTest
     }
 
     [Fact]
-    public async Task Same_Username_Should_Pass()
+    public async Task Same_Username_Should_Throw()
     {
         // Arrange
         RegisterDto command = new RegisterDto("Ak2", "address@domain.com", "QwErTy#$01");
@@ -62,8 +62,23 @@ public class RegisterTest : BaseTest
             .CountAsync();
 
         // Act + Assert
-        await Assert.ThrowsAsync<MongoDB.Driver.MongoWriteException>(
+        await Assert.ThrowsAsync<MongoWriteException>(
             async () => await _authService.Register(command)
+        );
+    }
+
+    [Fact]
+    public async Task Twice_Same_User_Should_Throw()
+    {
+        // Arrange
+        RegisterDto command1 = new RegisterDto("Ak2", "address@domain.com", "QwErTy#$01");
+        RegisterDto command2 = new RegisterDto("Ak2", "address2@domain.com", "QwErTy#$01");
+
+        await _authService.Register(command1);
+
+        // Act + Assert
+        await Assert.ThrowsAsync<MongoWriteException>(
+            async () => await _authService.Register(command2)
         );
     }
 }
