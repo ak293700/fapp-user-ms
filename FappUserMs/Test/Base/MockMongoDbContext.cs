@@ -1,18 +1,14 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
-using FappCommon.MongoDbContext;
+using FappCommon.Mongo4Test;
 using Infrastructure;
 using MongoDB.Driver;
 
-namespace Test.Mocks;
+namespace Test.Base;
 
-public class MockMongoDbContext : BaseMockMongoDbContext, IApplicationDbContext, IDisposable
+public class MockMongoDbContext : BaseMockMongoDbContext, IApplicationDbContext
 {
     public IMongoCollection<User> Users { get; private set; } = null!;
-
-    public MockMongoDbContext()
-    {
-    }
 
 
     protected override void InitCollections(IMongoDatabase database)
@@ -23,14 +19,5 @@ public class MockMongoDbContext : BaseMockMongoDbContext, IApplicationDbContext,
     protected override void RunMigrations(string connectionString)
     {
         ApplicationDbContext.RunMigrations(connectionString, DatabaseName);
-    }
-
-
-    public void Dispose()
-    {
-        // Just there to save memory during the test process
-        // At the end the instance is dropped so
-        Client.DropDatabase(DatabaseName);
-        GC.SuppressFinalize(this);
     }
 }

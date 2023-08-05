@@ -1,11 +1,9 @@
 using Application.Common.Dtos.AuthDtos;
 using Application.Common.Exceptions;
 using Application.Services;
-using Domain.Entities;
+using FappCommon.Mocks;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 using Test.Base;
-using Test.Mocks;
 
 namespace Test.UnitTests.Application.Services.AuthServiceTests;
 
@@ -20,8 +18,6 @@ public class RegisterTest : BaseTest
 
     public RegisterTest(MongoDatabaseFixture fixture) : base(fixture)
     {
-        SeedUsers();
-
         _authService = new AuthService(Context, ConfigurationMock.GetCustom(MockConf));
     }
 
@@ -49,17 +45,8 @@ public class RegisterTest : BaseTest
     public async Task Same_Username_Should_Throw()
     {
         // Arrange
-        RegisterDto command = new RegisterDto("Ak2", "address@domain.com", "QwErTy#$01");
+        RegisterDto command = new RegisterDto("Ak2", "fake.address@domain.com", "QwErTy#$01");
 
-        var count = await Context.Users.AsQueryable()
-            .CountAsync();
-
-        var client = Context.Client;
-        var database = client.GetDatabase(Context.DatabaseName);
-        var collection = database.GetCollection<User>("users");
-
-        var count2 = await collection.AsQueryable()
-            .CountAsync();
 
         // Act + Assert
         await Assert.ThrowsAsync<MongoWriteException>(
