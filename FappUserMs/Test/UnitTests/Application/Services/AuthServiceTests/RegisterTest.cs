@@ -129,6 +129,30 @@ public class RegisterTest : BaseTest
     }
 
     [Fact]
+    public async Task Username_Invalid_Starting_Character_Should_Throw()
+    {
+        // Arrange
+        RegisterDto command = new RegisterDto("8ohDab8",
+            "zinedine.zidane@marseille.fr",
+            "Pa2#");
+
+        // Act + Assert
+        await Assert.ThrowsAsync<DataValidationException>(async () => await _authService.Register(command));
+    }
+
+    [Fact]
+    public async Task Username_Illegal_Character_Should_Throw()
+    {
+        // Arrange
+        RegisterDto command = new RegisterDto("o=hDab8",
+            "zinedine.zidane@marseille.fr",
+            "Pa2#");
+
+        // Act + Assert
+        await Assert.ThrowsAsync<DataValidationException>(async () => await _authService.Register(command));
+    }
+
+    [Fact]
     public async Task Not_A_Real_Email_Should_Throw()
     {
         // Arrange

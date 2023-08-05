@@ -210,7 +210,7 @@ public class AuthService
         if (string.IsNullOrWhiteSpace(username) || username.Length is < 3 or > 20)
             throw new DataValidationException("Le nom d'utilisateur doit faire entre 3 et 20 caractères");
 
-        Regex regex = new Regex("^[a-zA-Z][a-zA-Z0-9_]*$",
+        Regex regex = new Regex("^[a-zA-Z][a-zA-Z0-9]*$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled,
             TimeSpan.FromSeconds(1));
 
@@ -224,6 +224,6 @@ public class AuthService
         }
 
         throw new DataValidationException(
-            "Le nom d'utilisateur doit commencer par une lettre puit ne contenir que des lettres, chiffres ou '_'");
+            "Le nom d'utilisateur doit commencer par une lettre puit ne contenir que des lettres et chiffres");
     }
 }
