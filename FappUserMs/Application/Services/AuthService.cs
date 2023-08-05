@@ -30,8 +30,12 @@ public class AuthService
 
     public async Task Register(RegisterDto request, CancellationToken cancellationToken = default)
     {
-        if (!IsEmailValid(request.Email))
-            throw new DataValidationException("L'email n'est pas valide");
+        ThrowIfEmailIsInvalid(request.Email);
+        ThrowIfUsernameIsInvalid(request.UserName);
+
+
+        if (request.UserName.Length is < 3 or > 20)
+            throw new DataValidationException("Le nom d'utilisateur doit faire entre 3 et 20 caractères");
 
         // ift he email address is already used
         if (_context.Users.AsQueryable().Any(u => u.Email == request.Email))
@@ -186,29 +190,40 @@ public class AuthService
                && password.Any(c => SpecialCharacters.Contains(c));
     }
 
-    private static bool IsEmailValid(string email)
+    private static void ThrowIfEmailIsInvalid(string email)
     {
-        MailAddress.TryCreate(email, out MailAddress _);
+        try
+        {
+            MailAddress address = new MailAddress(email);
+            if (string.IsNullOrEmpty(address.DisplayName))
+                return;
+        }
+        catch (FormatException)
+        {
+        }
 
-        if (string.IsNullOrEmpty(email))
-            return false;
+        throw new DataValidationException("L'email n'est pas valide");
+    }
 
-        return true;
+    private static void ThrowIfUsernameIsInvalid(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username) || username.Length is < 3 or > 20)
+            throw new DataValidationException("Le nom d'utilisateur doit faire entre 3 et 20 caractères");
 
-        const string regexStr =
-            @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$";
-
-        // Some options to prevent email regex cpu attack
-        Regex regex = new Regex(email, RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Compiled,
+        Regex regex = new Regex("^[a-zA-Z][a-zA-Z0-9_]*$",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled,
             TimeSpan.FromSeconds(1));
 
         try
         {
-            return regex.IsMatch(regexStr);
+            if (regex.IsMatch(username))
+                return;
         }
         catch (RegexMatchTimeoutException)
         {
-            return false;
         }
+
+        throw new DataValidationException(
+            "Le nom d'utilisateur doit commencer par une lettre puit ne contenir que des lettres, chiffres ou '_'");
     }
 }

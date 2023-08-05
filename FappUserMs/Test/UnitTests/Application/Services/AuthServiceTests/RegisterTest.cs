@@ -103,4 +103,40 @@ public class RegisterTest : BaseTest
         // Act + Assert
         await Assert.ThrowsAsync<DataValidationException>(async () => await _authService.Register(command));
     }
+
+    [Fact]
+    public async Task Username_Too_Short_Should_Throw()
+    {
+        // Arrange
+        RegisterDto command = new RegisterDto("Z",
+            "zinedine.zidane@marseille.fr",
+            "Pa2#");
+
+        // Act + Assert
+        await Assert.ThrowsAsync<DataValidationException>(async () => await _authService.Register(command));
+    }
+
+    [Fact]
+    public async Task Username_Too_Long_Should_Throw()
+    {
+        // Arrange
+        RegisterDto command = new RegisterDto("ZzobveowiYilufceUviveskcOevcivlsivbaobvawigvalw",
+            "zinedine.zidane@marseille.fr",
+            "Pa2#");
+
+        // Act + Assert
+        await Assert.ThrowsAsync<DataValidationException>(async () => await _authService.Register(command));
+    }
+
+    [Fact]
+    public async Task Not_A_Real_Email_Should_Throw()
+    {
+        // Arrange
+        RegisterDto command = new RegisterDto("Username",
+            "email",
+            "QwErTy#$89");
+
+        // Act + Assert
+        await Assert.ThrowsAsync<DataValidationException>(async () => await _authService.Register(command));
+    }
 }
