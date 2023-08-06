@@ -1,3 +1,4 @@
+using Application.Repositories;
 using Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,12 @@ public static class Configure
         builder.Services.AddScoped<AuthService>();
         builder.Services.AddScoped<FriendshipService>();
         builder.Services.AddScoped<UserService>();
+
+        #endregion
+
+        #region Repositories
+
+        builder.Services.AddScoped<FriendshipRepository>();
 
         #endregion
 
