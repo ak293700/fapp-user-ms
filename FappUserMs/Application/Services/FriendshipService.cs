@@ -20,7 +20,8 @@ public class FriendshipService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<LiteUserDto>> GetUserFriends(string userId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<LiteUserDto>> GetUserFriends(string userId,
+        CancellationToken cancellationToken = default)
     {
         // Todo there is a bug here
         var friends = await _context.Users

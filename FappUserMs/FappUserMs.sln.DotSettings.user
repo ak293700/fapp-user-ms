@@ -10,7 +10,7 @@
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a01390fb_002D7e03_002D4eae_002D8166_002D561c5b4e16be/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="1" IsActive="True" Name="RegisterTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=a01390fb_002D7e03_002D4eae_002D8166_002D561c5b4e16be/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="1" Name="RegisterTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::770E0FC0-2EAA-4661-9943-73BC4C6CAE5F::net7.0::Test.UnitTests.Application.Services.AuthServiceTests.RegisterTest&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::770E0FC0-2EAA-4661-9943-73BC4C6CAE5F::net7.0::Test.UnitTests.Application.Services.AuthServiceTests.LogInTest.Existing_User_Should_Pass&lt;/TestId&gt;
@@ -19,6 +19,12 @@
     &lt;TestId&gt;xUnit::770E0FC0-2EAA-4661-9943-73BC4C6CAE5F::net7.0::Test.UnitTests.Application.Services.AuthServiceTests.LogInTest.Email_And_Password_But_Wrong_Combination_Should_Throw&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::770E0FC0-2EAA-4661-9943-73BC4C6CAE5F::net7.0::Test.UnitTests.Application.Services.AuthServiceTests.LogInTest.Existing_Should_Pass&lt;/TestId&gt;
     &lt;TestId&gt;xUnit::770E0FC0-2EAA-4661-9943-73BC4C6CAE5F::net7.0::Test.UnitTests.Application.Services.AuthServiceTests.LogInTest.Email_And_Password_Exists_But_Wrong_Combination_Should_Throw&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bcda07bd_002Dd49f_002D40bb_002Da0fb_002D1361b485c69b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Existing_Should_Pass" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::770E0FC0-2EAA-4661-9943-73BC4C6CAE5F::net7.0::Test.UnitTests.Application.Services.FriendshipServiceTests.GetUserFriendsTest.Existing_Should_Pass&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::770E0FC0-2EAA-4661-9943-73BC4C6CAE5F::net7.0::Test.UnitTests.Application.Services.FriendshipServiceTests.GetUserFriendsTest.NotExisting_Should_Throw&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	</wpf:ResourceDictionary>

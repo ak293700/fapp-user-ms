@@ -1,3 +1,4 @@
+using Application.Common.Dtos.UserDtos;
 using Application.Services;
 using FappCommon.CurrentUserService;
 using FappCommon.Exceptions.DomainExceptions;
@@ -23,7 +24,8 @@ public class FriendshipController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IList<Guid>>> GetMyFriends(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<LiteUserDto>>> GetMyFriends(
+        CancellationToken cancellationToken = default)
     {
         try
         {
