@@ -19,6 +19,7 @@ public static class Configure
 
         #region Repositories
 
+        builder.Services.AddScoped<UserRepository>();
         builder.Services.AddScoped<FriendshipRepository>();
 
         #endregion

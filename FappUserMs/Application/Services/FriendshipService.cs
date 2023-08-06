@@ -22,6 +22,7 @@ public class FriendshipService
 
     public async Task<IEnumerable<LiteUserDto>> GetUserFriends(string userId, CancellationToken cancellationToken)
     {
+        // Todo there is a bug here
         var friends = await _context.Users
             .Find(u => u.Id == userId)
             .Project(u => u.Friends
@@ -33,10 +34,12 @@ public class FriendshipService
         if (friends == null)
             throw NotFoundDomainException.Instance;
 
-        return await _context.Users
+        var res = await _context.Users
             .Find(u => friends.Contains(u.Id))
             .Project(u => new LiteUserDto(u.Id, u.UserName))
             .ToListAsync(cancellationToken: cancellationToken);
+
+        return res;
     }
 
     public async Task Invite(string applicantId, string friendId, CancellationToken cancellationToken = default)
@@ -63,16 +66,14 @@ public class FriendshipService
         if (applicantSideState == JoiningState.Pending)
             throw new AlreadyExistDomainException("Une demande d'ami est déjà en cours");
 
-        if (applicantSideState == JoiningState.Pending)
+        if (friendSideState == JoiningState.Pending)
         {
             // Accept the existing invitation
             await _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.Accepted, cancellationToken);
             await _friendshipRepository.UpdateFriendship(friendId, applicantId, JoiningState.Accepted,
                 cancellationToken);
-            return;
         }
-
-        // Send the invitation
-        await _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.Pending, cancellationToken);
+        else // Send the invitation
+            await _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.Pending, cancellationToken);
     }
 }

@@ -1,6 +1,7 @@
 using Domain.Entities.UserEntities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using MongoDB.Driver.Linq;
 
 namespace Application.Repositories;
 
@@ -66,8 +67,8 @@ public class FriendshipRepository
                                              );
 
         return _context.Users.UpdateOneAsync(
-            filter, // The -1 index will be replaced by the filtered item
-            Builders<User>.Update.Set(u => u.Friends[-1], new Friend
+            filter,
+            Builders<User>.Update.Set(u => u.Friends.FirstMatchingElement(), new Friend
             {
                 UserId = friendId,
                 JoiningState = joiningState
