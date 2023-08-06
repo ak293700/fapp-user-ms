@@ -69,9 +69,11 @@ public class FriendshipService
         if (friendSideState == JoiningState.Pending)
         {
             // Accept the existing invitation
-            await _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.Accepted, cancellationToken);
-            await _friendshipRepository.UpdateFriendship(friendId, applicantId, JoiningState.Accepted,
-                cancellationToken);
+            await Task.WhenAll(
+                _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.Accepted, cancellationToken),
+                _friendshipRepository.UpdateFriendship(friendId, applicantId, JoiningState.Accepted,
+                    cancellationToken)
+            );
         }
         else // Send the invitation
             await _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.Pending, cancellationToken);
