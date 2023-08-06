@@ -52,30 +52,31 @@ public class FriendshipService
             || !await _userRepository.Exist(applicantId, cancellationToken))
             throw NotFoundDomainException.Instance;
 
-        JoiningState?[] joiningStates = await Task.WhenAll(_friendshipRepository
-                .GetFriendship(applicantId, friendId, cancellationToken),
-            _friendshipRepository
-                .GetFriendship(friendId, applicantId, cancellationToken));
+        JoiningState? applicantSideState = await _friendshipRepository.GetFriendship(applicantId, friendId,
+            cancellationToken);
 
-        JoiningState? applicantSideState = joiningStates[0];
-        JoiningState? friendSideState = joiningStates[1];
-
-        if (applicantSideState == JoiningState.Accepted || friendSideState == JoiningState.Accepted)
-            throw new AlreadyExistDomainException("Vous êtes déjà amis");
-
-        if (applicantSideState == JoiningState.Pending)
-            throw new AlreadyExistDomainException("Une demande d'ami est déjà en cours");
-
-        if (friendSideState == JoiningState.Pending)
+        switch (applicantSideState)
         {
-            // Accept the existing invitation
-            await Task.WhenAll(
-                _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.Accepted, cancellationToken),
-                _friendshipRepository.UpdateFriendship(friendId, applicantId, JoiningState.Accepted,
-                    cancellationToken)
-            );
+            case JoiningState.Accepted:
+                throw new AlreadyExistDomainException("Vous êtes déjà amis");
+            case JoiningState.AskedFromMe:
+                throw new AlreadyExistDomainException("Une demande d'ami est déjà en cours");
+            case JoiningState.AskedFromHim: // Accept the existing invitation
+            {
+                await Task.WhenAll(
+                    _friendshipRepository.UpdateFriendship(applicantId, friendId, JoiningState.Accepted,
+                        cancellationToken),
+                    _friendshipRepository.UpdateFriendship(friendId, applicantId, JoiningState.Accepted,
+                        cancellationToken)
+                );
+                return;
+            }
+            default:
+                break; // Not to nest the code too much
         }
-        else // Send the invitation
-            await _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.Pending, cancellationToken);
+
+        // Create the request
+        await _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.AskedFromMe, cancellationToken);
+        await _friendshipRepository.SetFriendship(friendId, applicantId, JoiningState.AskedFromHim, cancellationToken);
     }
 }
