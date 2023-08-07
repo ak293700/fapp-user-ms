@@ -1,7 +1,6 @@
 using Application.Common.Dtos.UserDtos;
 using Application.Repositories;
 using Domain.Entities.UserEntities;
-using FappCommon.Exceptions.ApplicationExceptions.UserExceptions.Base;
 using FappCommon.Exceptions.Base;
 using FappCommon.Exceptions.DomainExceptions;
 
@@ -122,9 +121,10 @@ public class FriendshipService
             case null:
                 throw NotFoundDomainException.Instance;
             case JoiningState.Accepted:
-                throw new UserException("Vous êtes déjà amis");
+                throw new AlreadyExistDomainException("Vous êtes déjà amis");
             case JoiningState.AskedFromMe:
                 throw NotFoundDomainException.Instance; // There is no request from applicant
+            case JoiningState.AskedFromHim:
             default:
                 break; // Not to nest the code too much
         }
