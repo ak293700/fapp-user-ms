@@ -15,6 +15,7 @@ public abstract class BaseTest : BaseMongoTest<MockMongoDbContext>
         SeedUsers();
     }
 
+    public const string FakeId = "11aa33dd2e7f31012418dea1";
 
     protected void SeedUsers()
     {

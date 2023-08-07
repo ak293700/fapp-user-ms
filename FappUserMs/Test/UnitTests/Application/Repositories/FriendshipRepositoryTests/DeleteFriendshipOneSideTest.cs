@@ -60,4 +60,45 @@ public class DeleteFriendshipOneSideTest : BaseTest
         Assert.DoesNotContain(user.Friends, f => f.UserId == friendId);
         Assert.DoesNotContain(friend.Friends, f => f.UserId == userId);
     }
+
+    [Fact]
+    public async Task NotExisting_User_Relationship()
+    {
+        // Arrange
+        const string userId = "55aa33a62e7f31012418dea8"; // Not existing
+        const string friendId = "64ce33dd2e7f31012418def3"; // Ak2
+
+        // Act
+        await _friendshipRepository.DeleteFriendshipOneSide(userId, friendId);
+
+        // Assert
+        User? user = await Context.Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        User? friend = await Context.Users.Find(u => u.Id == friendId).FirstOrDefaultAsync();
+
+        Assert.Null(user);
+        Assert.NotNull(friend);
+
+        Assert.Equal(3, friend.Friends.Count);
+    }
+
+
+    [Fact]
+    public async Task NotExisting_Friend_Relationship()
+    {
+        // Arrange
+        const string userId = "64ce33a62e7f31012418def2"; // Bret
+        const string friendId = FakeId; // Not existing
+
+        // Act
+        await _friendshipRepository.DeleteFriendshipOneSide(userId, friendId);
+
+        // Assert
+        User? user = await Context.Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        User? friend = await Context.Users.Find(u => u.Id == friendId).FirstOrDefaultAsync();
+
+        Assert.NotNull(user);
+        Assert.Null(friend);
+
+        Assert.Single(user.Friends);
+    }
 }
