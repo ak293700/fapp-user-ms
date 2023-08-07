@@ -102,7 +102,6 @@ public class FriendshipService
             .ToListAsync(cancellationToken: cancellationToken);
     }
 
-
     /// <param name="userId">The one that will accept the friends requests</param>
     /// <param name="applicantId">The user that originally made the friend request</param>
     public async Task AcceptInvitation(string userId, string applicantId, CancellationToken cancellationToken = default)

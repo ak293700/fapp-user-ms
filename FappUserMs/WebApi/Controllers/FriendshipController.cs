@@ -95,7 +95,7 @@ public class FriendshipController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    //
+
     // [HttpDelete("decline/{demanderId:guid}")]
     // public async Task<IActionResult> DeclineInvitation(Guid demanderId, CancellationToken cancellationToken = default)
     // {
