@@ -76,4 +76,27 @@ public class FriendshipRepository
             cancellationToken: cancellationToken
         );
     }
+
+    public Task DeleteFriendshipOneSide(string userId, string friendId, CancellationToken cancellationToken = default)
+    {
+        FilterDefinition<User>? filter = Builders<User>.Filter.Eq(u => u.Id, userId) // Select the user
+                                         & Builders<User>.Filter // The item of the Friends Array
+                                             .ElemMatch(x => x.Friends,
+                                                 Builders<Friend>.Filter.Eq(x => x.UserId, friendId)
+                                             );
+
+        return _context.Users.UpdateOneAsync(
+            filter,
+            Builders<User>.Update.PopFirst(u => u.Friends.FirstMatchingElement()),
+            cancellationToken: cancellationToken
+        );
+    }
+
+    public Task DeleteFriendshipBothSide(string user1Id, string user2Id, CancellationToken cancellationToken = default)
+    {
+        return Task.WhenAll(
+            DeleteFriendshipOneSide(user1Id, user2Id, cancellationToken),
+            DeleteFriendshipOneSide(user2Id, user1Id, cancellationToken)
+        );
+    }
 }
