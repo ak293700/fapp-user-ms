@@ -79,7 +79,7 @@ public class FriendshipService
     }
 
     public async Task<IEnumerable<LiteUserDto>> GetUserPendingInvitations(string userId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         // Check both users exist
         if (!await _userRepository.Exist(userId, cancellationToken))
