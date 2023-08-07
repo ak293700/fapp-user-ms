@@ -50,7 +50,7 @@ public class FriendshipService
 
         // Check both users exist
         if (!await _userRepository.Exist(applicantId, cancellationToken)
-            || !await _userRepository.Exist(applicantId, cancellationToken))
+            || !await _userRepository.Exist(friendId, cancellationToken))
             throw NotFoundDomainException.Instance;
 
         JoiningState? applicantSideState = await _friendshipRepository.GetFriendship(applicantId, friendId,
