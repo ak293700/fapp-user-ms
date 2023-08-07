@@ -77,8 +77,7 @@ public class FriendshipController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-    //
-    //
+
     // [HttpPost("accept/{demanderId:guid}")]
     // public async Task<IActionResult> AcceptInvitation(Guid demanderId, CancellationToken cancellationToken = default)
     // {
