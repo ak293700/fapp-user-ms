@@ -23,8 +23,7 @@ public class FriendshipService
     public async Task<IEnumerable<LiteUserDto>> GetUserFriends(string userId,
         CancellationToken cancellationToken = default)
     {
-        // Todo there is a bug here
-        var friends = await _context.Users
+        IEnumerable<string> friends = await _context.Users
             .Find(u => u.Id == userId)
             .Project(u => u.Friends
                 .Where(f => f.JoiningState == JoiningState.Accepted)
@@ -35,12 +34,10 @@ public class FriendshipService
         if (friends == null)
             throw NotFoundDomainException.Instance;
 
-        var res = await _context.Users
+        return await _context.Users
             .Find(u => friends.Contains(u.Id))
             .Project(u => new LiteUserDto(u.Id, u.UserName))
             .ToListAsync(cancellationToken: cancellationToken);
-
-        return res;
     }
 
     public async Task Invite(string applicantId, string friendId, CancellationToken cancellationToken = default)
@@ -79,5 +76,29 @@ public class FriendshipService
         // Create the request
         await _friendshipRepository.SetFriendship(applicantId, friendId, JoiningState.AskedFromMe, cancellationToken);
         await _friendshipRepository.SetFriendship(friendId, applicantId, JoiningState.AskedFromHim, cancellationToken);
+    }
+
+    public async Task<IEnumerable<LiteUserDto>> GetUserPendingInvitations(string userId,
+        CancellationToken cancellationToken)
+    {
+        // Check both users exist
+        if (!await _userRepository.Exist(userId, cancellationToken))
+            throw NotFoundDomainException.Instance;
+
+        IEnumerable<string> friends = await _context.Users
+            .Find(u => u.Id == userId)
+            .Project(u => u.Friends
+                .Where(f => f.JoiningState == JoiningState.AskedFromHim) // Only the ones that asked me
+                .Select(f => f.UserId)
+            )
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (friends == null)
+            throw NotFoundDomainException.Instance;
+
+        return await _context.Users
+            .Find(u => friends.Contains(u.Id))
+            .Project(u => new LiteUserDto(u.Id, u.UserName))
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 }
