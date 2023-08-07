@@ -1,6 +1,7 @@
 using Application.Common.Dtos.UserDtos;
 using Application.Repositories;
 using Domain.Entities.UserEntities;
+using FappCommon.Exceptions.ApplicationExceptions.UserExceptions.Base;
 using FappCommon.Exceptions.Base;
 using FappCommon.Exceptions.DomainExceptions;
 
@@ -100,5 +101,38 @@ public class FriendshipService
             .Find(u => friends.Contains(u.Id))
             .Project(u => new LiteUserDto(u.Id, u.UserName))
             .ToListAsync(cancellationToken: cancellationToken);
+    }
+
+
+    /// <param name="userId">The one that will accept the friends requests</param>
+    /// <param name="applicantId">The user that originally made the friend request</param>
+    public async Task AcceptInvitation(string userId, string applicantId, CancellationToken cancellationToken = default)
+    {
+        // Check both users exist
+        if (!await _userRepository.Exist(userId, cancellationToken)
+            || !await _userRepository.Exist(applicantId, cancellationToken))
+            throw NotFoundDomainException.Instance;
+
+        JoiningState? joiningState =
+            await _friendshipRepository.GetFriendship(userId, applicantId, cancellationToken);
+
+
+        switch (joiningState)
+        {
+            case null:
+                throw NotFoundDomainException.Instance;
+            case JoiningState.Accepted:
+                throw new UserException("Vous êtes déjà amis");
+            case JoiningState.AskedFromMe:
+                throw NotFoundDomainException.Instance; // There is no request from applicant
+            default:
+                break; // Not to nest the code too much
+        }
+
+        // Accept the request
+        await Task.WhenAll(
+            _friendshipRepository.UpdateFriendship(userId, applicantId, JoiningState.Accepted, cancellationToken),
+            _friendshipRepository.UpdateFriendship(applicantId, userId, JoiningState.Accepted, cancellationToken)
+        );
     }
 }

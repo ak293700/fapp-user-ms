@@ -78,23 +78,23 @@ public class FriendshipController : ControllerBase
         }
     }
 
-    // [HttpPost("accept/{demanderId:guid}")]
-    // public async Task<IActionResult> AcceptInvitation(Guid demanderId, CancellationToken cancellationToken = default)
-    // {
-    //     try
-    //     {
-    //         await _friendshipService.AcceptInvitation(_currentUserService.UserId, demanderId, cancellationToken);
-    //         return Ok();
-    //     }
-    //     catch (NotFoundDomainException e)
-    //     {
-    //         return NotFound(e.Message);
-    //     }
-    //     catch (CustomException e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    // }
+    [HttpPost("accept/{applicantId}")]
+    public async Task<IActionResult> AcceptInvitation(string applicantId, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await _friendshipService.AcceptInvitation(_currentUserService.UserId, applicantId, cancellationToken);
+            return Ok();
+        }
+        catch (NotFoundDomainException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (CustomException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
     //
     // [HttpDelete("decline/{demanderId:guid}")]
     // public async Task<IActionResult> DeclineInvitation(Guid demanderId, CancellationToken cancellationToken = default)
