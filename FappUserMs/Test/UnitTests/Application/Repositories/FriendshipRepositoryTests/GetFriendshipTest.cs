@@ -45,7 +45,7 @@ public class GetFriendshipTest : BaseTest
     }
 
     [Fact]
-    public async Task Not_Friend_Should_Pass()
+    public async Task Not_Friend_Should_Do()
     {
         // Arrange
         const string user1Id = "64ce32aeea1842cdf7250e88"; // Hugo
