@@ -4,11 +4,11 @@ using MongoDB.Driver;
 
 namespace Test.UnitTests.Application.Repositories.FriendshipRepositoryTests;
 
-public class DeleteFriendshipOneSideTest : BaseTest
+public class DeleteFriendshipBothSideTest : BaseTest
 {
     private readonly FriendshipRepository _friendshipRepository;
 
-    public DeleteFriendshipOneSideTest(MongoDatabaseFixture fixture) : base(fixture)
+    public DeleteFriendshipBothSideTest(MongoDatabaseFixture fixture) : base(fixture)
     {
         _friendshipRepository = new FriendshipRepository(Context);
     }
@@ -21,7 +21,7 @@ public class DeleteFriendshipOneSideTest : BaseTest
         const string friendId = "64ce33dd2e7f31012418def3"; // Ak2
 
         // Act
-        await _friendshipRepository.DeleteFriendshipOneSide(userId, friendId);
+        await _friendshipRepository.DeleteFriendshipBothSide(userId, friendId);
 
         // Assert
         User? user = await Context.Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
@@ -31,10 +31,10 @@ public class DeleteFriendshipOneSideTest : BaseTest
         Assert.NotNull(friend);
 
         Assert.Empty(user.Friends);
-        Assert.Equal(3, friend.Friends.Count);
+        Assert.Equal(2, friend.Friends.Count);
 
         Assert.DoesNotContain(user.Friends, f => f.UserId == friendId);
-        Assert.Contains(friend.Friends, f => f.UserId == userId);
+        Assert.DoesNotContain(friend.Friends, f => f.UserId == userId);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class DeleteFriendshipOneSideTest : BaseTest
         const string friendId = "64ce34002e7f31012418def5"; // Tim
 
         // Act
-        await _friendshipRepository.DeleteFriendshipOneSide(userId, friendId);
+        await _friendshipRepository.DeleteFriendshipBothSide(userId, friendId);
 
         // Assert
         User? user = await Context.Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
