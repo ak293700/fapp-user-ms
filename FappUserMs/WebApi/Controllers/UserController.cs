@@ -1,6 +1,5 @@
 using Application.Common.Dtos.UserDtos;
 using Application.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers;
@@ -9,7 +8,7 @@ namespace WebApi.Controllers;
 [Produces("application/json")]
 [Consumes("application/json")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;

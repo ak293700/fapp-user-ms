@@ -1,8 +1,11 @@
 using System.Text;
 using Application.Common.Interfaces;
 using Application.Services;
-using FappCommon.CurrentUserService;
 using FappCommon.Exceptions.InfrastructureExceptions.ConfigurationExceptions.Base;
+using FappCommon.Implementations.ICurrentUserServices;
+using FappCommon.Interfaces.ICurrentUserServices;
+using FappCommon.Mongo4Test;
+using FappCommon.Mongo4Test.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -22,14 +25,19 @@ public static class Configure
 
         #region DbContext
 
-        services.AddSingleton<IApplicationDbContext, ApplicationDbContext>();
-        ApplicationDbContext.RunMigrations(builder.Configuration);
+        MongoDbOptions options = new()
+        {
+            ConnectionStringName = "UserMongoDb",
+            DatabaseName = "users"
+        };
+        services.AddMongoDbContext<IApplicationDbContext, ApplicationDbContext>(options);
+        // BaseMongoDbContext.RunMigrations<ApplicationDbContext>(options, builder.Configuration);
 
         #endregion
 
         #region Services
 
-        services.AddScoped<ICurrentUserService, CurrentUserServiceImpl>();
+        services.AddScoped<ICurrentUserServiceString, CurrentUserServiceStringImpl>();
 
         #endregion
 

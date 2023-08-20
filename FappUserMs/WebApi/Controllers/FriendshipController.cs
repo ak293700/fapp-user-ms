@@ -1,7 +1,7 @@
 using Application.Common.Dtos.UserDtos;
 using Application.Services;
-using FappCommon.CurrentUserService;
 using FappCommon.Exceptions.DomainExceptions;
+using FappCommon.Interfaces.ICurrentUserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +15,9 @@ namespace WebApi.Controllers;
 public class FriendshipController : ControllerBase
 {
     private readonly FriendshipService _friendshipService;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ICurrentUserServiceString _currentUserService;
 
-    public FriendshipController(FriendshipService friendshipService, ICurrentUserService currentUserService)
+    public FriendshipController(FriendshipService friendshipService, ICurrentUserServiceString currentUserService)
     {
         _friendshipService = friendshipService;
         _currentUserService = currentUserService;
@@ -96,24 +96,25 @@ public class FriendshipController : ControllerBase
         }
     }
 
-    // [HttpDelete("decline/{demanderId:guid}")]
-    // public async Task<IActionResult> DeclineInvitation(Guid demanderId, CancellationToken cancellationToken = default)
-    // {
-    //     try
-    //     {
-    //         await _friendshipService.DeclineInvitation(_currentUserService.UserId, demanderId, cancellationToken);
-    //         return Ok();
-    //     }
-    //     catch (NotFoundDomainException e)
-    //     {
-    //         return NotFound(e.Message);
-    //     }
-    //     catch (CustomException e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    // }
-    //
+    [HttpDelete("decline/{applicantId}")]
+    public async Task<IActionResult> DeclineInvitation(string applicantId,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await _friendshipService.DeclineInvitation(_currentUserService.UserId, applicantId, cancellationToken);
+            return Ok();
+        }
+        catch (NotFoundDomainException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (CustomException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     // [HttpDelete("{friendId:guid}")]
     // public async Task<IActionResult> RemoveFriend(Guid friendId, CancellationToken cancellationToken = default)
     // {

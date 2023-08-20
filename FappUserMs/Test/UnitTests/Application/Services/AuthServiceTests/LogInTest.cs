@@ -34,7 +34,7 @@ public class LogInTest : BaseTest
         LogInDto command = new LogInDto("alexandre.akdeniz@wrong.email", "Ak2#2001");
 
         // Act + Assert
-        await Assert.ThrowsAsync<NotAuthorizedApplicationException>(
+        await Assert.ThrowsAsync<UnauthorizedException>(
             async () => await _authService.LogIn(command)
         );
     }
@@ -46,7 +46,7 @@ public class LogInTest : BaseTest
         LogInDto command = new LogInDto("alexandre.akdeniz@free.fr", "WrongPassword#2001");
 
         // Act + Assert
-        await Assert.ThrowsAsync<NotAuthorizedApplicationException>(
+        await Assert.ThrowsAsync<UnauthorizedException>(
             async () => await _authService.LogIn(command)
         );
     }
@@ -58,7 +58,7 @@ public class LogInTest : BaseTest
         LogInDto command = new LogInDto("alexandre.akdeniz@free.fr", "Kevy#2002");
 
         // Act + Assert
-        await Assert.ThrowsAsync<NotAuthorizedApplicationException>(
+        await Assert.ThrowsAsync<UnauthorizedException>(
             async () => await _authService.LogIn(command)
         );
     }

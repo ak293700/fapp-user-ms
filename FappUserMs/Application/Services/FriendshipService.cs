@@ -1,6 +1,7 @@
 using Application.Common.Dtos.UserDtos;
 using Application.Repositories;
 using Domain.Entities.UserEntities;
+using FappCommon.Exceptions.ApplicationExceptions.UserExceptions.Base;
 using FappCommon.Exceptions.Base;
 using FappCommon.Exceptions.DomainExceptions;
 
@@ -114,7 +115,6 @@ public class FriendshipService
         JoiningState? joiningState =
             await _friendshipRepository.GetFriendship(userId, applicantId, cancellationToken);
 
-
         switch (joiningState)
         {
             case null:
@@ -133,5 +133,35 @@ public class FriendshipService
             _friendshipRepository.UpdateFriendship(userId, applicantId, JoiningState.Accepted, cancellationToken),
             _friendshipRepository.UpdateFriendship(applicantId, userId, JoiningState.Accepted, cancellationToken)
         );
+    }
+
+    public async Task DeclineInvitation(string userId, string applicantId,
+        CancellationToken cancellationToken = default)
+    {
+        if (userId == applicantId)
+            throw new UserException("Vous êtes déjà amis");
+
+        // Check if the users exist
+        if (!await _userRepository.Exist(userId, cancellationToken)
+            || !await _userRepository.Exist(applicantId, cancellationToken))
+            throw NotFoundDomainException.Instance;
+
+        JoiningState? joiningState = await _friendshipRepository
+            .GetFriendship(userId, applicantId, cancellationToken);
+
+        switch (joiningState)
+        {
+            case null:
+            case JoiningState.AskedFromMe:
+                throw NotFoundDomainException.Instance; // There is no request from applicant
+            case JoiningState.Accepted:
+                throw new AlreadyExistDomainException("Vous êtes déjà amis");
+            case JoiningState.AskedFromHim:
+            default:
+                break; // Not to nest the code too much
+        }
+
+        // Decline the request
+        await _friendshipRepository.DeleteFriendshipBothSide(userId, applicantId, cancellationToken);
     }
 }

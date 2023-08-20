@@ -1,6 +1,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities.UserEntities;
-using FappCommon.Mongo4Test;
+using FappCommon.Mongo4Test.Implementations._4Tests;
 using Infrastructure;
 using MongoDB.Driver;
 
@@ -18,6 +18,7 @@ public class MockMongoDbContext : BaseMockMongoDbContext, IApplicationDbContext
 
     protected override void RunMigrations(string connectionString)
     {
-        ApplicationDbContext.RunMigrations(connectionString, DatabaseName);
+        // Run
+        // ApplicationDbContext.RunMigrations(connectionString, DatabaseName);
     }
 }

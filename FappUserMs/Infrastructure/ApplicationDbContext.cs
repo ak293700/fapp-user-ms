@@ -1,15 +1,22 @@
 using Application.Common.Interfaces;
 using Domain.Entities.UserEntities;
-using FappCommon.Exceptions.InfrastructureExceptions.ConfigurationExceptions.Base;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using FappCommon.Mongo4Test.Implementations;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Configuration;
-using MongoDBMigrations;
 
 namespace Infrastructure;
 
-public class ApplicationDbContext : IApplicationDbContext, IDisposable
+public class ApplicationDbContext : BaseMongoDbContext, IApplicationDbContext
+{
+    public const string UserCollectionName = "users";
+    public IMongoCollection<User> Users { get; private set; } = null!;
+
+    protected override void InitializeCollections(IMongoDatabase database)
+    {
+        Users = database.GetCollection<User>(UserCollectionName);
+    }
+}
+
+/*public class ApplicationDbContext : IApplicationDbContext, IDisposable
 {
     public IMongoCollection<User> Users { get; }
 
@@ -49,7 +56,7 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
     public static void RunMigrations(IConfiguration configuration)
     {
         // Get the connection string from the appsettings.json file
-        string connectionString = configuration.GetConnectionString("UserMongoDb")
+        string connectionString = configuration.GetConnectionString(ConnectionStringName)
                                   ?? throw ConfigurationException.ValueNotFoundException.Instance;
 
         RunMigrations(connectionString, DatabaseName);
@@ -68,6 +75,6 @@ public class ApplicationDbContext : IApplicationDbContext, IDisposable
     public void Dispose()
     {
         _loggerFactory.Dispose();
-        // GC.SuppressFinalize(this); // TODO: Understand this
+        GC.SuppressFinalize(this);
     }
-}
+}*/

@@ -102,11 +102,11 @@ public class AuthService
                     PasswordSalt = u.PasswordSalt
                 })
                 .FirstOrDefault()
-            ?? throw new NotAuthorizedApplicationException("Mot de passe ou email incorrect");
+            ?? throw new UnauthorizedException("Mot de passe ou email incorrect");
 
         // Check if the password is correct
         if (!VerifyPasswordHash(registerUser.Password, user.PasswordHash, user.PasswordSalt))
-            throw new NotAuthorizedApplicationException("Mot de passe ou email incorrect");
+            throw new UnauthorizedException("Mot de passe ou email incorrect");
 
         return new ValueTask<string>(CreateToken(user));
     }

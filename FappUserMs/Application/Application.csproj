@@ -8,9 +8,10 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="FappCommon" Version="2.1.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
-        <PackageReference Include="MongoDB.Driver.Core" Version="2.20.0"/>
+        <PackageReference Include="FappCommon" Version="2.2.3"/>
+        <PackageReference Include="FappCommon.Mongo4Test" Version="2.1.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10"/>
+        <PackageReference Include="MongoDB.Driver.Core" Version="2.21.0"/>
     </ItemGroup>
 
     <ItemGroup>

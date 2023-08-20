@@ -1,5 +1,3 @@
-using Application.Common.Interfaces;
-using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -15,13 +13,13 @@ public static class Configure
     public static WebApplicationBuilder ConfigureWebApi(this WebApplicationBuilder builder)
     {
         IServiceCollection services = builder.Services;
-        
+
         services.AddControllers();
         ConfigureSwagger(services);
 
         return builder;
     }
-    
+
     private static void ConfigureSwagger(IServiceCollection services)
     {
         #region Swagger
@@ -29,7 +27,7 @@ public static class Configure
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "Izily", Version = "v1.0" });
-            
+
             // Allow swagger to handle JWT Bearer tokens and authorization
             // Should not change "oauth2" to another name
             options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -48,8 +46,7 @@ public static class Configure
         {
             options.DocExpansion(DocExpansion.None); // Set default collapse state
         });
-        
+
         #endregion
     }
-
 }
