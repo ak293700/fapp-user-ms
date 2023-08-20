@@ -31,7 +31,7 @@ public static class Configure
             DatabaseName = "users"
         };
         services.AddMongoDbContext<IApplicationDbContext, ApplicationDbContext>(options);
-        // BaseMongoDbContext.RunMigrations<ApplicationDbContext>(options, builder.Configuration);
+        BaseMongoDbContext.RunMigrations<ApplicationDbContext>(options, builder.Configuration);
 
         #endregion
 
