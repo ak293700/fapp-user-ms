@@ -11,6 +11,7 @@ using FappCommon.Exceptions.ApplicationExceptions.UserExceptions;
 using FappCommon.Exceptions.DomainExceptions;
 using FappCommon.Exceptions.InfrastructureExceptions.ConfigurationExceptions.Base;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services;
@@ -20,10 +21,12 @@ public class AuthService
     private readonly string _authToken;
     private readonly IApplicationDbContext _context;
     public const string AuthTokenLocation = "Auth:Token";
+    private readonly ILogger<AuthService> _logger;
 
-    public AuthService(IApplicationDbContext context, IConfiguration configuration)
+    public AuthService(IApplicationDbContext context, IConfiguration configuration, ILogger<AuthService> logger)
     {
         _context = context;
+        _logger = logger;
         _authToken = configuration.GetValue<string>(AuthTokenLocation)
                      ?? throw new ConfigurationException("Unable to get the auth token");
     }
@@ -53,6 +56,7 @@ public class AuthService
         };
 
         await _context.Users.InsertOneAsync(user, cancellationToken: cancellationToken);
+        _logger.LogInformation("{Username} created with id {Id}", user.UserName, user.Id);
     }
 
     /// <summary>

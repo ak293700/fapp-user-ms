@@ -4,12 +4,17 @@ using Application.Services;
 using FappCommon.Exceptions.InfrastructureExceptions.ConfigurationExceptions.Base;
 using FappCommon.Implementations.ICurrentUserServices;
 using FappCommon.Interfaces.ICurrentUserServices;
+using FappCommon.Kafka.Config;
+using FappCommon.Kafka.Extensions;
+using FappCommon.Kafka.Log;
 using FappCommon.Mongo4Test;
 using FappCommon.Mongo4Test.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure;
@@ -22,6 +27,7 @@ public static class Configure
     public static WebApplicationBuilder ConfigureInfrastructure(this WebApplicationBuilder builder)
     {
         IServiceCollection services = builder.Services;
+        IWebHostEnvironment env = builder.Environment;
 
         #region DbContext
 
@@ -38,6 +44,21 @@ public static class Configure
         #region Services
 
         services.AddScoped<ICurrentUserServiceString, CurrentUserServiceStringImpl>();
+
+        #endregion
+
+        #region Logger
+
+        services.AddSingleton<KafkaProducerConfig>();
+        services.AddScoped<KafkaLogProducerService>();
+
+        builder.Logging
+            .ClearProviders();
+
+        // if (env.IsProduction())
+        builder.Logging.AddKafkaLogger();
+        // else
+        builder.Logging.AddConsole();
 
         #endregion
 
